@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Librarian Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3 style="margin-left: 3vw;">Welcome To LIBRARYTECH</h3>
+    <div class="profile">
+      <div class="avatar">L</div>
+      <h3>Librarian</h3>
+    </div>
+
+    <ul>
+      <li onclick="scrollToSection('booksSection')">Books</li>
+      <li onclick="scrollToSection('studentsSection')">Students</li>
+      <li>Account</li>
+      <li>Reports</li>
+    </ul>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- BOOKS SECTION -->
+<section id="booksSection" class="section">
+  <h2 style="margin-bottom: 2px">Library Books</h2>
+
+  <!-- Search Bar -->
+  <div class="top-bar">
+    <input type="text" id="bookSearchInput" placeholder="Search books...">
+    <button onclick="searchBooks()">Search</button>
+  </div>
+
+  <div id="booksGrid" class="books-grid"></div>
+</section>
+
+    <!-- STUDENTS SECTION -->
+    <section id="studentsSection" class="section">
+  <h2 style="margin-bottom: 2px">Student Records</h2>
+
+  <!-- Search Bar -->
+  <div class="top-bar">
+    <input type="text" id="studentSearchInput" placeholder="Search student by name...">
+    <button onclick="searchStudents()">Search</button>
+  </div>
+
+  <div id="studentsContainer">
+
+    <!-- PRIYA -->
+    <div class="student-card">
+      <div class="student-header">
+        <div>
+          <h3>Priya Das</h3>
+          <p class="student-email">priya@university.com</p>
+        </div>
+        <span class="book-count">2 Books</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Data Structures</span>
+        <span class="status issued">Issued</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Operating Systems</span>
+        <span class="status returned">Returned</span>
+      </div>
+    </div>
+
+
+    <!-- ANURIMA -->
+    <div class="student-card">
+      <div class="student-header">
+        <div>
+          <h3>Anurima Sarkar</h3>
+          <p class="student-email">anurima@university.com</p>
+        </div>
+        <span class="book-count">3 Books</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Computer Networks</span>
+        <span class="status issued">Issued</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Database Systems</span>
+        <span class="status returned">Returned</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Artificial Intelligence</span>
+        <span class="status issued">Issued</span>
+      </div>
+    </div>
+
+
+    <!-- JOHN -->
+    <div class="student-card">
+      <div class="student-header">
+        <div>
+          <h3>John Sen</h3>
+          <p class="student-email">john@university.com</p>
+        </div>
+        <span class="book-count">2 Books</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Data Structures</span>
+        <span class="status returned">Returned</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Operating Systems</span>
+        <span class="status returned">Returned</span>
+      </div>
+    </div>
+
+
+    <!-- RAHUL -->
+    <div class="student-card">
+      <div class="student-header">
+        <div>
+          <h3>Rahul Sen</h3>
+          <p class="student-email">rahul@university.com</p>
+        </div>
+        <span class="book-count">2 Books</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Computer Networks</span>
+        <span class="status issued">Issued</span>
+      </div>
+
+      <div class="transaction-row">
+        <span>Operating Systems</span>
+        <span class="status issued">Issued</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© 2026 University Library Management System</p>
+      <p>Administrative Dashboard</p>
+    </footer>
+
+  </div>
+</div>
+
+
+<script>
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+function logout(){
+  window.location.href = "index.html";
+}
+</script>
+
+<script>
+
+let books = [
+  {
+    id:1,
+    title:"Data Structures",
+    author:"Mark Allen Weiss",
+    available:4,
+    img:"https://m.media-amazon.com/images/I/81RB3sHo5-L.jpg"
+  },
+  {
+    id:2,
+    title:"Operating Systems",
+    author:"Galvin",
+    available:3,
+    img:"https://cdn01.sapnaonline.com/bk_images/939/9780470279939.jpg"
+  },
+  {
+    id:3,
+    title:"Computer Networks",
+    author:"Tanenbaum",
+    available:4,
+    img:"https://m.media-amazon.com/images/I/61JmBUeCaNL._AC_UF1000,1000_QL80_.jpg"
+  },
+  {
+    id:4,
+    title:"Database Systems",
+    author:"Korth",
+    available:2,
+    img:"https://www.mheducation.co.in/media/catalog/product/cache/081b8c22b4dd107671c14f517fd777a1/9/7/9789390727506.jpg"
+  },
+  {
+    id:5,
+    title:"Artificial Intelligence",
+    author:"Stuart Russell",
+    available:0,
+    img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx0dfWCfhKrfXf1ASDqyjOI1l8dqVRTdpOYQ&s"
+  }
+];
+
+function renderBooks(list = books){
+  const grid = document.getElementById("booksGrid");
+  grid.innerHTML = "";
+
+  list.forEach(book=>{
+    grid.innerHTML += `
+      <div class="book-card admin-card">
+        <img src="${book.img}">
+        <h4>${book.title}</h4>
+        <p>${book.author}</p>
+
+        <p>
+          <strong>Available:</strong> 
+          <span id="qty-${book.id}">${book.available}</span>
+        </p>
+
+        <div class="admin-buttons">
+          <button onclick="increaseQty(${book.id})">+</button>
+          <button onclick="decreaseQty(${book.id})">-</button>
+          <button onclick="saveBook(${book.id})">Save</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function increaseQty(id){
+  let book = books.find(b=>b.id===id);
+  book.available++;
+  renderBooks();
+}
+
+function decreaseQty(id){
+  let book = books.find(b=>b.id===id);
+  if(book.available > 0){
+    book.available--;
+  }
+  renderBooks();
+}
+
+function saveBook(id){
+  alert("Changes saved successfully!");
+}
+
+function searchBooks(){
+  const text = document.getElementById("bookSearchInput").value.toLowerCase();
+  const filtered = books.filter(book =>
+    book.title.toLowerCase().includes(text)
+  );
+  renderBooks(filtered);
+}
+
+renderBooks();
+
+</script>
+
+<script>
+function searchStudents(){
+  const input = document.getElementById("studentSearchInput").value.toLowerCase();
+  const cards = document.querySelectorAll(".student-card");
+
+  cards.forEach(card=>{
+    const name = card.querySelector("h3").innerText.toLowerCase();
+    if(name.includes(input)){
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+</script>
+
+</body>
+</html>

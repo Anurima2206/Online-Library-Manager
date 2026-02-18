@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3 style="margin-left: 3vw;">Welcome To LIBRARYTECH</h3>
+    <div class="profile">
+      <div class="avatar">A</div>
+    </div>
+
+    <ul>
+      <li onclick="scrollToSection('searchSection')">Search</li>
+      <li onclick="scrollToSection('transactionSection')">My Transactions</li>
+      <li>Account</li>
+      <li>Service</li>
+    </ul>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- SEARCH SECTION -->
+    <section id="searchSection" class="section">
+      <div class="top-bar">
+        <input type="text" id="searchInput" placeholder="Search for books...">
+        <button onclick="searchBooks()">Search</button>
+      </div>
+
+      <div class="books-grid" id="booksGrid"></div>
+    </section>
+
+
+    <!-- TRANSACTION SECTION -->
+    <section id="transactionSection" class="section">
+      <h2>My Transactions!</h2>
+      <div id="transactionList"></div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+      <p>© 2026 University Library Management System</p>
+      <p>Designed in 2026</p>
+    </footer>
+
+  </div>
+</div>
+
+
+<script>
+
+let books = [
+  {id:1, title:"Data Structures", author:"Mark Allen Weiss", available:4, img:"https://m.media-amazon.com/images/I/81RB3sHo5-L.jpg"},
+  {id:2, title:"Operating Systems", author:"Galvin", available:3, img:"https://cdn01.sapnaonline.com/bk_images/939/9780470279939.jpg"},
+  {id:3, title:"Computer Networks", author:"Andrew Tanenbaum", available:4, img:"https://m.media-amazon.com/images/I/61JmBUeCaNL._AC_UF1000,1000_QL80_.jpg"},
+  {id:4, title:"Database Systems", author:"Korth", available:2, img:"https://www.mheducation.co.in/media/catalog/product/cache/081b8c22b4dd107671c14f517fd777a1/9/7/9789390727506.jpg"},
+  {id:5, title:"Artificial Intelligence", author:"Stuart Russell", available:0, img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx0dfWCfhKrfXf1ASDqyjOI1l8dqVRTdpOYQ&s"},
+  {id:6, title:"Software Engineering", author:"Pressman", available:5, img:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8fQV7Q42Gf-0gr-Ffstt-cM11rvemdMjOIw&s"}
+];
+
+let transactions = [
+  {id:1, title:"Operating Systems", status:"Issued"},
+  {id:2, title:"Artificial Intelligence", status:"Issued"},
+  {id:3, title:"Data Structures", status:"Issued"},
+];
+
+function renderBooks(list = books) {
+
+  const grid = document.getElementById("booksGrid");
+  grid.innerHTML = "";
+
+  list.forEach(book => {
+
+    grid.innerHTML += `
+      <div class="book-card">
+        <img src="${book.img}" alt="Book Image">
+        <h4>${book.title}</h4>
+        <p>${book.author}</p>
+        <p>Available: ${book.available}</p>
+        ${book.available > 0 
+          ? `<button onclick="issueBook(${book.id})">Issue</button>` 
+          : `<button class="disabled">Not Available</button>`
+        }
+      </div>
+    `;
+  });
+}
+
+function issueBook(id) {
+
+  let book = books.find(b => b.id === id);
+
+  if(book.available > 0){
+    book.available--;
+    transactions.push({id:book.id, title:book.title, status:"Issued"});
+    renderBooks();
+    renderTransactions();
+  }
+}
+
+function renderTransactions() {
+
+  const container = document.getElementById("transactionList");
+  container.innerHTML = "";
+
+  transactions.forEach(item => {
+
+    container.innerHTML += `
+      <div class="transaction-card">
+        <span>${item.title}</span>
+        <span class="status">${item.status}</span>
+        <button onclick="returnBook(${item.id})">Return</button>
+      </div>
+    `;
+  });
+}
+
+function returnBook(id) {
+
+  let book = books.find(b => b.id === id);
+  book.available++;
+
+  let txn = transactions.find(t => t.id === id);
+  txn.status = "Returned";
+
+  renderBooks();
+  renderTransactions();
+}
+
+function searchBooks(){
+  const text = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = books.filter(book =>
+    book.title.toLowerCase().includes(text)
+  );
+  renderBooks(filtered);
+}
+
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+function logout(){
+  window.location.href = "index.html";
+}
+
+renderBooks();
+renderTransactions();
+
+</script>
+
+</body>
+</html>

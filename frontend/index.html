@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main-container">
+
+  <!-- LEFT IMAGE SIDE -->
+  <div class="image-section">
+    <!-- 🔥 PUT YOUR IMAGE LINK BELOW -->
+    <img src="https://images.pexels.com/photos/1907785/pexels-photo-1907785.jpeg" alt="Library Image">
+  </div>
+
+  <!-- RIGHT LOGIN SIDE -->
+  <div class="login-section">
+
+    <div class="login-card">
+
+      <h2>📚 LIBRARYTECH</h2>
+      <p class="subtitle">Access your account</p>
+
+      <input type="email" id="email" placeholder="University Email">
+
+      <input type="password" id="password" placeholder="Password">
+
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="librarian">Teacher</option>
+      </select>
+
+      <button onclick="login()">Login</button>
+
+      <p class="register-text">
+        Not registered? <span>Sign up</span>
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
