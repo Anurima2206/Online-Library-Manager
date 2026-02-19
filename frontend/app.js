@@ -94,6 +94,47 @@ async function addBook() {
 
   alert("Book Added Successfully!");
 }
+async function addBook() {
+
+  const title = document.getElementById("title").value;
+  const author = document.getElementById("author").value;
+  const copies = document.getElementById("copies").value;
+
+  if (!title || !author || !copies) {
+    alert("Please fill all fields!");
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API}/books/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      title,
+      author,
+      availableCopies: copies
+    })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Book Added Successfully!");
+
+    // Clear fields
+    document.getElementById("title").value = "";
+    document.getElementById("author").value = "";
+    document.getElementById("copies").value = "";
+
+    searchBooks(); // Refresh list
+  } else {
+    alert(data.message || "Error adding book");
+  }
+}
 
 
 // ================= LOGOUT =================

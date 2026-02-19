@@ -39,6 +39,18 @@
     <input type="text" id="bookSearchInput" placeholder="Search books...">
     <button onclick="searchBooks()">Search</button>
   </div>
+<!-- ADD BOOK SECTION -->
+<div class="add-book-section">
+  <h3>Add New Book</h3>
+
+  <div class="add-book-form">
+    <input type="text" id="newTitle" placeholder="Book Title">
+    <input type="text" id="newAuthor" placeholder="Author Name">
+    <input type="number" id="newQty" placeholder="Available Quantity">
+    <input type="text" id="newImg" placeholder="Image URL">
+    <button onclick="addBook()">Add Book</button>
+  </div>
+</div>
 
   <div id="booksGrid" class="books-grid"></div>
 </section>
