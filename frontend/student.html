@@ -44,6 +44,7 @@
     <!-- TRANSACTION SECTION -->
     <section id="transactionSection" class="section">
       <h2>My Transactions!</h2>
+      <h3 style="color: red;margin-bottom:5px;">All issued books are to be returned within 7 days or reissued after that period!!</h3>
       <div id="transactionList"></div>
     </section>
 
@@ -51,7 +52,8 @@
     <!-- FOOTER -->
     <footer>
       <p>© 2026 University Library Management System</p>
-      <p>Designed in 2026</p>
+      <p>LibraryTech</p>
+      <p>Designed by Anurima Sarkar</p>
     </footer>
 
   </div>
@@ -118,8 +120,7 @@ function renderTransactions() {
     container.innerHTML += `
       <div class="transaction-card">
         <span>${item.title}</span>
-        <span class="status">${item.status}</span>
-        <button onclick="returnBook(${item.id})">Return</button>
+        <button onclick="returnBook(${item.id})">${item.status}</button>
       </div>
     `;
   });
