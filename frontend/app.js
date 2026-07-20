@@ -1,144 +1,238 @@
+
 const API = "http://localhost:5000/api";
 
-// ================= LOGIN =================
+/* ==========================
+          LOGIN
+========================== */
+
 async function login() {
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const role = document.getElementById("role").value;
+    const email =
+    document.getElementById("email").value;
 
-  const res = await fetch(`${API}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
+    const password =
+    document.getElementById("password").value;
 
-  const data = await res.json();
+    const role =
+    document.getElementById("role").value;
 
-  if (data.token && data.role === role) {
+    if (!email || !password || !role) {
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
-    localStorage.setItem("studentId", data.id);
+        alert("Please fill all fields.");
 
-    // Role-based redirection
-    if (role === "student") {
-
-      if (email === "priya@university.com") {
-        window.location.href = "student.html";
-      }
-
-      else if (email === "anurima@university.com") {
-        window.location.href = "student2.html";
-      }
-
-      else {
-        alert("Student demo page not configured.");
-      }
-
-    } else if (role === "librarian") {
-      window.location.href = "librarian.html";
+        return;
     }
 
-  } else {
-    alert("Invalid credentials or wrong role");
-  }
+    try {
+
+        const res = await fetch(`${API}/auth/login`, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email,
+                password
+            })
+
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+
+            alert(data.message || "Login Failed");
+
+            return;
+        }
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("studentId", data.id);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("name", data.name);
+
+        if (data.role === "student") {
+
+            window.location.href = "student.html";
+
+        }
+
+        else if (data.role === "librarian") {
+
+            window.location.href = "librarian.html";
+
+        }
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        alert("Server Error");
+
+    }
+
 }
 
 
-// ================= SEARCH BOOKS =================
+/* ==========================
+        SEARCH BOOKS
+========================== */
+
 async function searchBooks() {
 
-  const res = await fetch(`${API}/books`);
-  const books = await res.json();
+    try {
 
-  const searchText = document.getElementById("searchInput").value.toLowerCase();
+        const res = await fetch(`${API}/books`);
 
-  const filtered = books.filter(book =>
-    book.title.toLowerCase().includes(searchText)
-  );
+        const books = await res.json();
 
-  const list = document.getElementById("bookList");
+        const searchText =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
 
-  if (!list) return;
+        const filtered = books.filter(book =>
 
-  list.innerHTML = "";
+            book.title
+            .toLowerCase()
+            .includes(searchText)
 
-  filtered.forEach(book => {
-    list.innerHTML += `
-      <li>
-        ${book.title} - ${book.author}
-        (Available: ${book.availableCopies})
-      </li>
-    `;
-  });
+            ||
+
+            book.author
+            .toLowerCase()
+            .includes(searchText)
+
+        );
+
+        const list =
+        document.getElementById("bookList");
+
+        if (!list) return;
+
+        list.innerHTML = "";
+
+        filtered.forEach(book => {
+
+            list.innerHTML += `
+
+            <li>
+
+                ${book.title}
+
+                -
+
+                ${book.author}
+
+                (Available :
+
+                ${book.availableCopies})
+
+            </li>
+
+            `;
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+    }
+
 }
 
 
-// ================= ADD BOOK (Librarian) =================
+/* ==========================
+        ADD BOOK
+========================== */
+
 async function addBook() {
 
-  const title = document.getElementById("title").value;
-  const author = document.getElementById("author").value;
-  const copies = document.getElementById("copies").value;
+    const title =
+    document.getElementById("newTitle").value;
 
-  await fetch(`${API}/books/add`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      title,
-      author,
-      availableCopies: copies
-    })
-  });
+    const author =
+    document.getElementById("newAuthor").value;
 
-  alert("Book Added Successfully!");
+    const qty =
+    document.getElementById("newQty").value;
+
+    const img =
+    document.getElementById("newImg").value;
+
+    if (!title || !author || !qty) {
+
+        alert("Please fill all fields.");
+
+        return;
+    }
+
+    try {
+
+        const res = await fetch(`${API}/books/add`, {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                title,
+
+                author,
+
+                availableCopies: qty,
+
+                image: img
+
+            })
+
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+
+            alert(data.message);
+
+            return;
+
+        }
+
+        alert("Book Added Successfully!");
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+    }
+
 }
-async function addBook() {
-
-  const title = document.getElementById("title").value;
-  const author = document.getElementById("author").value;
-  const copies = document.getElementById("copies").value;
-
-  if (!title || !author || !copies) {
-    alert("Please fill all fields!");
-    return;
-  }
-
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`${API}/books/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      title,
-      author,
-      availableCopies: copies
-    })
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    alert("Book Added Successfully!");
-
-    // Clear fields
-    document.getElementById("title").value = "";
-    document.getElementById("author").value = "";
-    document.getElementById("copies").value = "";
-
-    searchBooks(); // Refresh list
-  } else {
-    alert(data.message || "Error adding book");
-  }
-}
 
 
-// ================= LOGOUT =================
+/* ==========================
+          LOGOUT
+========================== */
+
 function logout() {
-  localStorage.clear();
-  window.location.href = "index.html";
+
+    localStorage.clear();
+
+    window.location.href = "index.html";
+
 }

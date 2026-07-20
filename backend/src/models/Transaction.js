@@ -4,21 +4,37 @@ const transactionSchema = new mongoose.Schema(
   {
     student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
+      required: true
     },
+
     book: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Book"
+      ref: "Book",
+      required: true
     },
+
     issueDate: {
       type: Date,
       default: Date.now
     },
+
     returnDate: Date,
+
     status: {
       type: String,
       enum: ["issued", "returned"],
       default: "issued"
+    },
+
+    fine: {
+      type: Number,
+      default: 0
+    },
+
+    finePaid: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

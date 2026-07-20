@@ -17,3 +17,41 @@ export const getBooks = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateBook = async(req,res)=>{
+
+    try{
+
+        const book = await Book.findByIdAndUpdate(
+
+            req.params.id,
+
+            {
+
+                availableCopies:req.body.availableCopies
+
+            },
+
+            {
+
+                new:true
+
+            }
+
+        );
+
+        res.json(book);
+
+    }
+
+    catch(err){
+
+        res.status(500).json({
+
+            message:err.message
+
+        });
+
+    }
+
+}
